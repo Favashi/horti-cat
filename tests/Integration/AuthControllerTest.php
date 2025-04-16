@@ -2,60 +2,17 @@
 
 namespace Tests\Integration;
 
-use PHPUnit\Framework\TestCase;
-use Slim\Factory\AppFactory;
-use DI\ContainerBuilder;
+use Tests\BaseTestCase;
 use Slim\Psr7\Factory\ServerRequestFactory;
 use Slim\Psr7\Factory\StreamFactory;
-use App\Domain\Repository\UserRepositoryInterface;
-use App\Application\UseCase\Auth\GenerateTokenServiceInterface;
 use App\Interfaces\Controllers\AuthController;
-use App\Application\UseCase\Auth\AuthenticateUser;
-use App\Domain\Entity\User;
 
-class AuthControllerTest extends TestCase
+class AuthControllerTest extends BaseTestCase
 {
-    private $app;
 
     protected function setUp(): void
     {
-        // Configura el contenedor para test con implementaciones dummy
-        $containerBuilder = new ContainerBuilder();
-        $containerBuilder->addDefinitions([
-            UserRepositoryInterface::class => function () {
-                // Utilizamos un hash fijo para asegurar la consistencia en tests.
-                $fixedHash = '$2y$10$Wjht8DQ3F3Y.z3XgGJX1.eKw1Kz91LZZySXS6lpqU/EX9Mlu3Y1lm';
-                // Devuelve un usuario para el username "admin"
-                return new class($fixedHash) implements UserRepositoryInterface {
-                    private $fixedHash;
-                    public function __construct($fixedHash) {
-                        $this->fixedHash = $fixedHash;
-                    }
-                    public function findByUsername(string $username): ?User {
-                        if ($username === 'admin') {
-                            return new User('1', 'admin', $this->fixedHash);
-                        }
-                        return null;
-                    }
-                    public function getAllUsers(): array {
-                        return [];
-                    }
-                };
-            },
-            GenerateTokenServiceInterface::class => function () {
-                return new class implements GenerateTokenServiceInterface {
-                    public function generateToken(array $claims): string {
-                        return 'dummy-token';
-                    }
-                };
-            },
-        ]);
-        $container = $containerBuilder->build();
-
-        // Configura Slim usando el contenedor
-        AppFactory::setContainer($container);
-        $this->app = AppFactory::create();
-
+        parent::setUp();
         // Registra la ruta de login
         $this->app->post('/auth/login', AuthController::class . ':login');
     }

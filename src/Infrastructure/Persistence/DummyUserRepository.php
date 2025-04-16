@@ -7,20 +7,18 @@ use App\Domain\Repository\UserRepositoryInterface;
 
 class DummyUserRepository implements UserRepositoryInterface
 {
+    private $fixedHash = '$2y$10$oZJ3mXKZOZsxWQBM7iiKHetS.XzBDH9QRaSg8mC.ZntSpCc0vDtoa';
     public function findByUsername(string $username): ?User {
         if ($username === 'admin') {
-            // Usa el hash precomputado para "secret"
-            $fixedHash = '$2y$10$Wjht8DQ3F3Y.z3XgGJX1.eKw1Kz91LZZySXS6lpqU/EX9Mlu3Y1lm';
-            return new User('1', 'admin', $fixedHash);
+            return new User('1', 'admin', $this->fixedHash);
         }
         return null;
     }
 
     public function getAllUsers(): array {
-        $fixedHash = '$2y$10$Wjht8DQ3F3Y.z3XgGJX1.eKw1Kz91LZZySXS6lpqU/EX9Mlu3Y1lm';
-        return [
-            new User('1', 'admin', $fixedHash),
-            new User('2', 'user1', $fixedHash)
+       return [
+            new User('1', 'admin', $this->fixedHash),
+            new User('2', 'user1', $this->fixedHash)
         ];
     }
 }

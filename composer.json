@@ -3,7 +3,7 @@
   "description": "API para huerto urbano usando Slim Framework, con Guzzle, Monolog, Dotenv, Eloquent ORM y documentación OpenAPI.",
   "type": "project",
   "require": {
-    "php": ">=8.0",
+    "php": ">=8.2",
     "firebase/php-jwt": "^6.11",
     "guzzlehttp/guzzle": "^7.0",
     "illuminate/database": "^9.0",

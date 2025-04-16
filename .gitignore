@@ -3,3 +3,4 @@ public/.DS_Store
 src/.DS_Store
 vendor
 .DS_Store
+/public/coverage/

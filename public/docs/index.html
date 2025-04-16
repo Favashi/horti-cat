@@ -18,8 +18,9 @@
 
     <script>
       window.onload = function() {
+        const swaggerJsonUrl = window.location.origin + "/docs/swagger.json";
         const ui = SwaggerUIBundle({
-          url: "/openapi.json",
+          url: swaggerJsonUrl,
           dom_id: '#swagger-ui',
           presets: [
             SwaggerUIBundle.presets.apis,

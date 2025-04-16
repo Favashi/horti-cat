@@ -8,7 +8,17 @@
     "servers": [
         {
             "url": "/api",
-            "description": "Base path para la API"
+            "description": "Base path para la API",
+            "variables": {
+                "version": {
+                    "enum": [
+                        "v1",
+                        "v2"
+                    ],
+                    "default": "v1",
+                    "description": "version"
+                }
+            }
         }
     ],
     "paths": {
@@ -128,48 +138,6 @@
                     }
                 ]
             }
-        },
-        "/users": {
-            "get": {
-                "tags": [
-                    "Usuarios"
-                ],
-                "summary": "Obtener usuarios",
-                "operationId": "32e479caa516011262334c7a7749aa16",
-                "responses": {
-                    "200": {
-                        "description": "Lista de usuarios",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "properties": {
-                                            "id": {
-                                                "type": "string",
-                                                "example": "1"
-                                            },
-                                            "username": {
-                                                "type": "string",
-                                                "example": "admin"
-                                            }
-                                        },
-                                        "type": "object"
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "No autorizado"
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
         }
     },
     "components": {
@@ -193,10 +161,6 @@
         {
             "name": "Metrics",
             "description": "Metrics"
-        },
-        {
-            "name": "Usuarios",
-            "description": "Usuarios"
         }
     ]
 }

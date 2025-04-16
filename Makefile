@@ -4,7 +4,7 @@
 DOCKER_COMPOSE = docker-compose
 CONTAINER_PHP = php-app
 
-.PHONY: help build up down restart composer-install exec-php test logs clean test test-unit test-integration
+.PHONY: help build up down restart composer-install exec-php test logs clean test test-unit test-integration test-coverage
 
 help: ## Muestra esta ayuda y lista de comandos disponibles.
 	@echo "Uso: make [target]"
@@ -56,3 +56,6 @@ test-unit: ## Ejecuta solo los tests unitarios
 
 test-integration: ## Ejecuta solo los tests de integración
 	docker-compose run --rm php vendor/bin/phpunit --testsuite Integration
+
+test-coverage: ## Ejecuta los tests y genera un reporte de cobertura HTML
+	docker-compose run --rm -e XDEBUG_MODE=coverage php vendor/bin/phpunit --coverage-html public/coverage --coverage-clover public/coverage/clover.xml --colors=always

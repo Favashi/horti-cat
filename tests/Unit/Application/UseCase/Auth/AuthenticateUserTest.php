@@ -23,18 +23,18 @@ class AuthenticateUserTest extends TestCase
 
     public function testAuthenticateValidCredentials(): void
     {
-        // Preparamos los datos dummy para el usuario
-        $fixedHash = '$2y$10$Wjht8DQ3F3Y.z3XgGJX1.eKw1Kz91LZZySXS6lpqU/EX9Mlu3Y1lm';
+        $userRepositoryMock = $this->createMock(UserRepositoryInterface::class);
+        // Hash predefinido para "secret"
+        $fixedHash = '$2y$10$oZJ3mXKZOZsxWQBM7iiKHetS.XzBDH9QRaSg8mC.ZntSpCc0vDtoa';
         $dummyUser = new User('1', 'admin', $fixedHash);
 
-        // Configuramos el mock del repositorio para que retorne el usuario cuando se le solicite "admin"
-        $this->userRepositoryMock->expects($this->once())
+        $userRepositoryMock->expects($this->once())
             ->method('findByUsername')
             ->with('admin')
             ->willReturn($dummyUser);
 
-        // Configuramos el mock del servicio de token para que genere el token esperado
-        $this->tokenServiceMock->expects($this->once())
+        $tokenServiceMock = $this->createMock(GenerateTokenServiceInterface::class);
+        $tokenServiceMock->expects($this->once())
             ->method('generateToken')
             ->with($this->callback(function ($claims) {
                 return isset($claims['sub'], $claims['username'])
@@ -43,9 +43,7 @@ class AuthenticateUserTest extends TestCase
             }))
             ->willReturn('dummy-token');
 
-        // Creamos el caso de uso con los mocks inyectados
-        $authenticateUser = new AuthenticateUser($this->userRepositoryMock, $this->tokenServiceMock);
-
+        $authenticateUser = new AuthenticateUser($userRepositoryMock, $tokenServiceMock);
         $token = $authenticateUser->execute('admin', 'secret');
         $this->assertEquals('dummy-token', $token);
     }
